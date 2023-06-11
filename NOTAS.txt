@@ -1,0 +1,29 @@
+composer create-project laravel/laravel crud-laravel-vuejs
+
+npm i vue@next vue-loader@next @vue/compiler-sfc babel-loader @babel/core
+npm install vue-router@4
+npm i @vitejs/plugin-vue
+
+##VITECONFIG##
+
+/*
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+    plugins: [
+        vue(),
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+    ],
+});
+
+*/
+
+##BARRA .php
+@vite('resources/js/app.js')
+
+composer require intervention/image
