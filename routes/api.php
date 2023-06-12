@@ -21,5 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(ProductController::class)->group(function(){
     Route::get('product', 'getAllProduct');
+    Route::get('product/{id}', 'editProduct');
     Route::post('product', 'addProduct');
+    Route::put('product/{id}', 'updateProduct');
+    Route::delete('product/{id}', 'deleteProduct');
 });

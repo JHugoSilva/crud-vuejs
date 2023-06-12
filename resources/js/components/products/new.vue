@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 let form = ref({
     name: '',
@@ -10,13 +11,15 @@ let form = ref({
     price: ''
 })
 
+const router = useRouter()
+
 const getPhoto = () => {
-    let photo = '/images/image.png'
+    let photo = '/storage/images/image.png'
     if (form.value.photo) {
-        if (form.value.indexOf('base64') != -1) {
+        if (form.value.photo.indexOf('base64') != -1) {
             photo = form.value.photo
         } else {
-            photo = '/images/'+form.value.photo
+            photo = '/storage/images/'+form.value.photo
         }
     }
     return photo
@@ -38,6 +41,7 @@ const updatePhoto = (e) => {
 const saveProduct = () => {
     const formData = new FormData()
     formData.append('name', form.value.name)
+    formData.append('description', form.value.description)
     formData.append('photo', form.value.photo)
     formData.append('type', form.value.type)
     formData.append('quantity', form.value.quantity)
@@ -45,7 +49,19 @@ const saveProduct = () => {
 
     axios.post('/api/product', formData)
     .then((response)=>{
-        
+        form.value.name = '',
+        form.value.description = '',
+        form.value.photo = '',
+        form.value.type = '',
+        form.value.quantity = '',
+        form.value.price = '',
+
+        router.push("/")
+
+        toast.fire({
+            icon: 'success',
+            title: 'Product add successfully'
+        })
     })
     .catch((error)=>{
         console.log(error)
@@ -88,7 +104,7 @@ const saveProduct = () => {
                        <li class="products__create__main--media--images--item">
                            <form class="products__create__main--media--images--item--form">
                                <label class="products__create__main--media--images--item--form--label" for="myfile">Add Image</label>
-                               <input class="products__create__main--media--images--item--form--input" type="file" @change="updatePhoto()" id="myfile" >
+                               <input class="products__create__main--media--images--item--form--input" type="file" @change="updatePhoto" id="myfile" >
                            </form>
                        </li>
                    </ul>
@@ -111,7 +127,7 @@ const saveProduct = () => {
                 <!-- Product invrntory -->
                 <div class="my-3">
                     <p>Inventory</p>
-                    <input type="text" class="input" >
+                    <input type="text" class="input" v-model="form.quantity">
                 </div>
                 <hr>
 
@@ -127,7 +143,7 @@ const saveProduct = () => {
     <!-- Footer Bar -->
     <div class="dflex justify-content-between align-items-center my-3">
         <p ></p>
-        <button class="btn btn-secondary" >Save</button>
+        <button class="btn btn-secondary" @click="saveProduct()">Save</button>
     </div>
 
 </div>

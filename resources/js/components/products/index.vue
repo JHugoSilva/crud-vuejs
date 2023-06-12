@@ -1,6 +1,8 @@
 <script setup>
     import { onMounted, ref } from "vue";
+    import { useRouter } from 'vue-router'
 
+    const router = useRouter()
     let products = ref([])
     
     onMounted(async () => {
@@ -13,7 +15,50 @@
     }
 
     const ourImage = (img) => {
-        return "/upload/"+img
+        if (img == 0) {
+            let imageDefault = "/storage/images/image.png"
+            return imageDefault;
+        } else {
+            let imageDB = "/storage/images/"+img
+            return imageDB
+        }
+    }
+
+    const onEdit = (id) => {
+        router.push('/product/edit/'+id)
+    }
+
+    const deleteProduct = (id) => {
+        Swal.fire({
+            title: 'Are you sure ?',
+            text: 'You can\'t got back',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085D6',
+            cancelButtonColor: '#D33',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Yes, delete it'
+        })
+        .then((resutl)=>{
+            if (resutl.value) {
+                axios.delete(`/api/product/${id}`)
+                .then(()=>{
+                    Swal.fire(
+                        'Delete',
+                        'Product delete successfully!',
+                        'success'
+                    )
+                    getProducts()
+                })
+                .catch(()=>{
+                    Swal.fire(
+                        'Failed!',
+                        'There was something wrong!',
+                        'warning'
+                    )
+                })
+            }
+        })
     }
 </script>
 <template>
@@ -62,10 +107,10 @@
                     {{ item.quantity }}
                 </p>     
                 <div>     
-                    <button class="btn-icon btn-icon-success" >
+                    <button class="btn-icon btn-icon-success" @click="onEdit(item.id)">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button class="btn-icon btn-icon-danger" >
+                    <button class="btn-icon btn-icon-danger" @click="deleteProduct(item.id)">
                         <i class="far fa-trash-alt"></i>
                     </button>
                 </div>

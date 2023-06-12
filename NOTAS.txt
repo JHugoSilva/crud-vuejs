@@ -27,3 +27,5 @@ export default defineConfig({
 @vite('resources/js/app.js')
 
 composer require intervention/image
+
+npm i sweetalert2
